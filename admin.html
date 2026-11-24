@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>WhisperBox – আমার বার্তা</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;700&family=Noto+Serif+Bengali:wght@700;800&family=Anek+Bangla:wght@400;600&family=Atma:wght@400;600&family=Baloo+Da+2:wght@500&family=Galada&family=Tiro+Bangla&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f2ee;--ink:#2a1f2d;--mute:#6f6272;--card:#fff;--line:#e5d9d6;--a:#d6336c;--b:#6741d9;--ok:#17806d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17121f;--ink:#f4eef7;--mute:#b4a8ba;--card:#221a2e;--line:#3a2e49;--a:#ff6b9d;--b:#9d85ff;--ok:#4cc9ae}}
+:root[data-theme="dark"]{--bg:#17121f;--ink:#f4eef7;--mute:#b4a8ba;--card:#221a2e;--line:#3a2e49;--a:#ff6b9d;--b:#9d85ff;--ok:#4cc9ae}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.7 "Hind Siliguri",system-ui,sans-serif;min-height:100%}
+h1,h2{font-family:"Noto Serif Bengali",serif;margin:0;line-height:1.35}
+.bg{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.bg i{position:absolute;border-radius:50%;filter:blur(60px);opacity:.35;animation:fl 14s ease-in-out infinite alternate}
+.bg i:nth-child(1){width:300px;height:300px;background:var(--a);top:-60px;left:-60px}
+.bg i:nth-child(2){width:340px;height:340px;background:var(--b);bottom:-80px;right:-60px;animation-delay:3s}
+@keyframes fl{to{transform:translate(40px,60px)}}
+.top{display:flex;justify-content:flex-end;gap:8px;padding:12px 14px}
+.top button{font:inherit;font-size:14px;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:99px;padding:5px 14px;cursor:pointer}
+button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid var(--b);outline-offset:2px}
+.wrap{max-width:560px;margin:0 auto;padding:0 18px 60px}
+.pcard{position:relative;margin-top:10px;border-radius:28px;padding:28px 22px 24px;text-align:center;color:#fff;background:linear-gradient(140deg,var(--b),var(--a));box-shadow:0 18px 40px rgba(103,65,217,.3);overflow:hidden}
+.pcard::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 40%,rgba(255,255,255,.28) 50%,transparent 60%);transform:translateX(-120%);animation:sh 5s ease-in-out infinite}
+@keyframes sh{60%,100%{transform:translateX(120%)}}
+.av{width:124px;height:124px;border-radius:50%;margin:0 auto 14px;border:4px solid rgba(255,255,255,.85);background:rgba(255,255,255,.2) center/cover;display:grid;place-items:center;font-size:52px;position:relative;z-index:1}
+.pcard h1{font-size:26px;position:relative;z-index:1}
+.pcard p{margin:6px 0 0;opacity:.92;position:relative;z-index:1}
+.own{margin-top:12px;position:relative;z-index:1;display:none;gap:8px;justify-content:center;flex-wrap:wrap}
+.own button,.own label{font:inherit;font-size:14px;background:rgba(255,255,255,.22);color:#fff;border:1px solid rgba(255,255,255,.5);border-radius:99px;padding:4px 14px;cursor:pointer}
+.own input[type=file]{display:none}
+.box{margin-top:22px;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:20px}
+.box h2{font-size:21px;margin-bottom:4px}
+.hint{color:var(--mute);font-size:15px;margin:0 0 14px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.chips button{font:inherit;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:99px;padding:5px 14px;cursor:pointer}
+.chips button[aria-pressed=true]{background:var(--b);border-color:var(--b);color:#fff}
+textarea{width:100%;min-height:130px;font:inherit;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:14px;padding:12px;resize:vertical}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;flex-wrap:wrap}
+.cnt{font-size:14px;color:var(--mute)}
+#who{width:100%;font:inherit;font-size:16px;margin-top:12px;padding:9px 14px;color:var(--ink);background:transparent;border:1px dashed var(--line);border-radius:99px}
+.by{display:block;text-align:right;font-weight:700;font-size:15px;margin-top:2px;line-height:1.6}
+.set{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 10px;align-items:center}
+.set b{font-size:13px;color:var(--mute);font-weight:500;margin-right:2px}
+.set button{font:inherit;font-size:15px;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:99px;padding:2px 12px;cursor:pointer}
+.set button[aria-pressed=true]{background:var(--a);border-color:var(--a);color:#fff}
+.paper{position:relative;border-radius:6px;padding:18px 16px 10px 54px;margin:8px 0 6px;color:#2a1f2d;background-color:#fffdf4;background-image:repeating-linear-gradient(transparent 0 33px,#a9c7e6 33px 34px);background-position:0 14px;box-shadow:0 10px 24px rgba(0,0,0,.2);transform:rotate(-.6deg);transition:transform .3s,box-shadow .3s}
+.paper::before{content:"";position:absolute;left:40px;top:0;bottom:0;width:2px;background:#e58b8b}
+.paper::after{content:"";position:absolute;right:0;top:0;border-style:solid;border-width:0 26px 26px 0;border-color:transparent var(--card) rgba(0,0,0,.14) transparent}
+.paper:focus-within{transform:rotate(0) translateY(-3px);box-shadow:0 18px 34px rgba(103,65,217,.35)}
+.paper textarea{border:0;background:transparent;padding:0;min-height:204px;line-height:34px;font-size:19px;color:#2a1f2d;caret-color:var(--a);border-radius:0}
+.paper textarea::placeholder{color:#a79a8a}
+.paper.sticky{background-color:#ffe97a;background-image:none;padding-left:18px;transform:rotate(1.2deg)}.paper.sticky::before{display:none}
+.paper.love{background-color:#ffd9e4;background-image:repeating-linear-gradient(transparent 0 33px,#f1a5bd 33px 34px)}.paper.love::before{background:#e0607e}
+.paper.old{background-color:#ecd9b0;background-image:repeating-linear-gradient(transparent 0 33px,#c8aa72 33px 34px)}.paper.old::before{background:#b4693f}
+.paper.small{padding:12px 14px 6px 50px;margin:14px 0;min-height:0;transform:rotate(0)}.paper.small.sticky{padding-left:16px}
+.paper.small p{line-height:34px;font-size:18px;margin:0;white-space:pre-wrap}
+.paper.small .tag{background:rgba(0,0,0,.1);color:#2a1f2d}.paper.small button{color:#b02a56}
+.msg.paper{border-top:0}
+.fly{animation:fly .9s ease-in forwards}
+@keyframes fly{30%{transform:scale(.85,1) rotate(-3deg)}100%{transform:translate(140px,-320px) rotate(20deg) scale(.15);opacity:0}}
+.send{font:inherit;font-weight:700;color:#fff;border:0;border-radius:99px;padding:10px 26px;cursor:pointer;background:linear-gradient(135deg,var(--b),var(--a));transition:transform .15s}
+.send:active{transform:scale(.95)}.send:disabled{opacity:.5;cursor:default}
+.lock{display:flex;gap:8px;align-items:center;color:var(--ok);font-size:14px;margin-top:12px}
+.thanks{display:none;text-align:center;padding:10px 0}
+.thanks b{font-size:46px;display:block;animation:pop .6s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pop{from{transform:scale(0)}}
+.msg{border-top:1px dashed var(--line);padding:12px 0}
+.msg small{color:var(--mute)}
+.msg button{float:right;font:inherit;font-size:13px;border:0;background:none;color:var(--a);cursor:pointer}
+.tag{display:inline-block;font-size:13px;border-radius:99px;padding:0 10px;background:var(--line)}
+.share{display:flex;gap:8px;justify-content:center;margin-top:20px;flex-wrap:wrap}
+.share button{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:99px;padding:7px 18px;cursor:pointer}
+.warn{color:var(--a);font-size:15px;display:none;margin-top:12px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"><i></i><i></i></div>
+<div class="top"><span style="margin-right:auto;align-self:center;font-family:'Noto Serif Bengali',serif;font-weight:800;font-size:20px">💌 WhisperBox</span><button id="out" style="display:none">বের হন</button></div>
+<div class="wrap">
+<section class="box" id="login" style="text-align:center"><h2>শুধু আপনার জন্য</h2><p class="hint">নিজের Google অ্যাকাউন্ট দিয়ে সাইন-ইন করলে আসা বার্তাগুলো দেখতে পাবেন।</p><button class="send" id="in">Google দিয়ে সাইন-ইন</button><div class="warn" id="wn"></div></section>
+<section class="box" id="inbox" style="display:none"><h2>আসা বার্তা <span id="n"></span></h2><div id="ms"></div></section>
+</div>
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getAuth,signInWithPopup,GoogleAuthProvider,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {getFirestore,collection,query,orderBy,onSnapshot,deleteDoc,doc} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {firebaseConfig} from "./firebase-config.js";
+var $=function(i){return document.getElementById(i)};
+var bn="০১২৩৪৫৬৭৮৯";function B(n){return String(n).replace(/\d/g,function(x){return bn[x]})}
+var FF=["'Hind Siliguri'","'Atma'","'Tiro Bangla'","'Galada'","'Baloo Da 2'","'Anek Bangla'"];
+function ff(i){return FF[i||0]+",'Hind Siliguri',sans-serif"}
+function warn(t){var w=$("wn");w.textContent=t;w.style.display="block"}
+if(String(firebaseConfig.apiKey).indexOf("PASTE")===0){warn("firebase-config.js ফাইলে নিজের Firebase কনফিগ বসান।");$("in").disabled=true}
+else{
+var app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app),unsub=null;
+$("in").onclick=function(){signInWithPopup(auth,new GoogleAuthProvider()).catch(function(){warn("সাইন-ইন হয়নি। আবার চেষ্টা করুন।")})};
+$("out").onclick=function(){signOut(auth)};
+onAuthStateChanged(auth,function(u){
+ if(unsub){unsub();unsub=null}
+ $("login").style.display=u?"none":"block";$("inbox").style.display=u?"block":"none";$("out").style.display=u?"inline-block":"none";
+ if(!u)return;
+ unsub=onSnapshot(query(collection(db,"messages"),orderBy("created","desc")),function(q){
+  $("n").textContent="("+B(q.size)+")";var m=$("ms");m.innerHTML="";
+  if(!q.size)m.innerHTML='<p class="hint">এখনও কোনো বার্তা আসেনি। লিংকটি শেয়ার করুন।</p>';
+  q.forEach(function(d){var x=d.data(),e=document.createElement("div");
+   e.className="msg paper small "+((x.p||"l")==="l"?"":x.p);e.style.fontFamily=ff(x.f);
+   var t=document.createElement("span");t.className="tag";t.textContent=x.kind||"";
+   var del=document.createElement("button");del.textContent="মুছুন";del.onclick=function(){deleteDoc(doc(db,"messages",d.id))};
+   var p=document.createElement("p");p.style.margin="6px 0 0";p.textContent=x.text||"";
+   var by=document.createElement("span");by.className="by";by.textContent=x.n?"— "+x.n:"— নাম জানাননি";
+   e.appendChild(del);e.appendChild(t);e.appendChild(p);e.appendChild(by);m.appendChild(e)})
+ },function(){$("inbox").style.display="none";$("login").style.display="block";warn("এই অ্যাকাউন্টে বার্তা দেখার অনুমতি নেই। যে Google অ্যাকাউন্ট rules-এ দিয়েছেন সেটা দিয়ে সাইন-ইন করুন।");signOut(auth)})
+});
+}
+</script>
+</body>
+</html>
